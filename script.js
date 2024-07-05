@@ -15,7 +15,7 @@ const rings = [];
 for (let i = 4; i >= 0; i--) {
     const ringGeometry = new THREE.RingGeometry(0.2 + i * 0.1, 0.3 + i * 0.1, 32) 
     const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-    ring.position.set(0,1.5 - i * 0.3,  0);
+    ring.position.set(0,1 - i * 0.2,  0);
     
     rings.push(ring);
     scene.add(ring);
@@ -23,10 +23,11 @@ for (let i = 4; i >= 0; i--) {
 for (let i = 0; i < 5; i++) {
     const ringGeometry = new THREE.RingGeometry(0.2 + i * 0.1, 0.3 + i * 0.1, 32); 
     const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-    ring.position.set(0, -1.7+ i * 0.3, 0);
+    ring.position.set(0, -0.9+ i * 0.2, 0);
     rings.push(ring);
     scene.add(ring);
 }
+
 
 // Create star particles
 const starGeometry = new THREE.BufferGeometry();
@@ -42,29 +43,27 @@ starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVerti
 const stars = new THREE.Points(starGeometry, starMaterial);
 scene.add(stars);
 
-camera.position.z = 3; // Adjust the camera position to view all rings
+// Position the camera
+camera.position.z = 5;
 
-// Animation state
-let scaleFactor = 1;
-let scaleDirection = 1;
+
+
 
 // Render loop
 function animate() {
     requestAnimationFrame(animate);
 
-    // Pulsating effect
-    scaleFactor += 0.01 * scaleDirection;
-    if (scaleFactor > 1.2 || scaleFactor < 0.8) {
-        scaleDirection *= -1; 
-    }
-
-    
+    // Rotate the rings
     rings.forEach((ring, index) => {
-        let factor = scaleFactor + index * 0.05;
-        ring.scale.set(factor, factor, factor);
+        ring.rotation.x += 0.01;
+        
     });
+    // Rotate the stars for a dynamic effect
+    stars.rotation.x += 0.001;
+    stars.rotation.y += 0.001;
 
     renderer.render(scene, camera);
 }
+
 
 animate();
